@@ -1,15 +1,25 @@
-# Makefile
+CC = gcc
+CFLAGS = -Wall -g -Iheader `sdl2-config --cflags`
+LDFLAGS = `sdl2-config --libs` -lm
 
-CC=gcc
-CFLAGS=-Iinc -lSDL2
-SOURCES=$(wildcard src/*.c)
-OBJECTS=$(SOURCES:.c=.o)
-TARGET=raycasting_game
+# Source files
+SRC = src/main.c src/map.c src/player.c
 
-all: $(TARGET)
+# Object files
+OBJ = $(SRC:.c=.o)
 
-$(TARGET): $(OBJECTS)
-	$(CC) -o $@ $^ $(CFLAGS)
+# Executable
+EXEC = raycasting_game
+
+all: $(EXEC)
+
+$(EXEC): $(OBJ)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(EXEC) $(OBJ)
+
+.PHONY: all clean
