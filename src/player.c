@@ -28,23 +28,17 @@ void destroy_player(Player* player) {
     free(player);
 }
 
-#include <stdio.h>  // Make sure this is included for printf
-
 // Check if a given position is within the world map
 int check_wall(Player* player, int x, int y) {
     // Print the coordinates and corresponding map value for debugging
-    printf("Checking wall at coordinates (%d, %d)\n", x, y);
     
     // Check bounds and print the result of the bounds check
     if (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT) {
-        printf("Map value at (%d, %d): %d\n", x, y, player->mini_map[y][x]);
         return (player->mini_map[y][x] == 1);  // Wall if value is 1
     } else {
-        printf("Coordinates (%d, %d) are out of bounds.\n", x, y);
         return 0;  // Out of bounds is considered empty
     }
 }
-
 
 // Move the player and handle collisions
 void player_movement(Player* player, const Uint8* keys) {
@@ -84,13 +78,14 @@ void player_movement(Player* player, const Uint8* keys) {
 
 // Check wall collision and update player position
 void player_check_wall_collision(Player* player, float dx, float dy) {
-    int new_x = (int)(player->x + dx) / TILE_SIZE;
-    int new_y = (int)(player->y + dy) / TILE_SIZE;
+    int new_x = (int)((player->x + dx) / TILE_SIZE);
+    int new_y = (int)((player->y + dy) / TILE_SIZE);
 
-    if (!check_wall(player, new_x, (int)player->y / TILE_SIZE)) {
+    // Check if the new position is valid and update player position
+    if (!check_wall(player, new_x, (int)(player->y / TILE_SIZE))) {
         player->x += dx;
     }
-    if (!check_wall(player, (int)player->x / TILE_SIZE, new_y)) {
+    if (!check_wall(player, (int)(player->x / TILE_SIZE), new_y)) {
         player->y += dy;
     }
 }

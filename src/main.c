@@ -2,39 +2,44 @@
 #include <stdio.h>
 #include "map.h"    // Include the map header file
 #include "player.h" // Include the player header file
+#include "raycasting.h"
 
 #define WINDOW_WIDTH 1100
 #define WINDOW_HEIGHT 1100
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
     // Create window
-    SDL_Window* window = SDL_CreateWindow(
-        "Map Display",                      // Window title
-        SDL_WINDOWPOS_UNDEFINED,           // Initial x position
-        SDL_WINDOWPOS_UNDEFINED,           // Initial y position
-        WINDOW_WIDTH,                      // Width, in pixels
-        WINDOW_HEIGHT,                     // Height, in pixels
-        SDL_WINDOW_SHOWN                   // Window flags
+    SDL_Window *window = SDL_CreateWindow(
+        "Map Display",           // Window title
+        SDL_WINDOWPOS_UNDEFINED, // Initial x position
+        SDL_WINDOWPOS_UNDEFINED, // Initial y position
+        WINDOW_WIDTH,            // Width, in pixels
+        WINDOW_HEIGHT,           // Height, in pixels
+        SDL_WINDOW_SHOWN         // Window flags
     );
-    if (window == NULL) {
+    if (window == NULL)
+    {
         fprintf(stderr, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
     }
 
     // Create renderer
-    SDL_Renderer* renderer = SDL_CreateRenderer(
-        window,                            // Window
-        -1,                                // Renderer index
-        SDL_RENDERER_ACCELERATED           // Renderer flags
+    SDL_Renderer *renderer = SDL_CreateRenderer(
+        window,                  // Window
+        -1,                      // Renderer index
+        SDL_RENDERER_ACCELERATED // Renderer flags
     );
-    if (renderer == NULL) {
+    if (renderer == NULL)
+    {
         fprintf(stderr, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -42,17 +47,20 @@ int main(int argc, char* argv[]) {
     }
 
     // Create the map
-    Map* map = create_map(renderer);
+    Map *map = create_map(renderer);
 
     // Create the player
-    Player* player = create_player(renderer,map->mini_map);
+    Player *player = create_player(renderer, map->mini_map);
 
     // Main loop
     int running = 1;
-    while (running) {
+    while (running)
+    {
         SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+            {
                 running = 0;
             }
         }
@@ -69,7 +77,7 @@ int main(int argc, char* argv[]) {
         // Draw the map
         map_draw(map);
         player_update(player);
-        
+        ray_cast(player, map);
         // Present the renderer
         SDL_RenderPresent(renderer);
 

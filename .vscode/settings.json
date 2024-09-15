@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "game.h": "c",
-        "player.h": "c"
+        "player.h": "c",
+        "raycasting.h": "c"
     }
 }
