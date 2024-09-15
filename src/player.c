@@ -42,10 +42,12 @@ int check_wall(Player* player, int x, int y) {
 
 // Move the player and handle collisions
 void player_movement(Player* player, const Uint8* keys) {
+    
+    // In the player_movement function, adjust the speed:
+    float speed = PLAYER_SPEED * 0.5;  // Reduced speed for better control
     float sin_a = sinf(player->angle);
     float cos_a = cosf(player->angle);
     float dx = 0, dy = 0;
-    float speed = PLAYER_SPEED;  
     float speed_sin = speed * sin_a;
     float speed_cos = speed * cos_a;
 
@@ -108,5 +110,5 @@ void player_draw(Player* player) {
 void player_update(Player* player) {
     const Uint8* keys = SDL_GetKeyboardState(NULL);
     player_movement(player, keys);
-    player_draw(player);
 }
+

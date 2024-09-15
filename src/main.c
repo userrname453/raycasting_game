@@ -71,13 +71,20 @@ int main(int argc, char *argv[])
         // Clear the screen
         SDL_RenderClear(renderer);
 
-        // Update the player
-        // player_update(player);
+        // Draw sky
+        SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);  // Light blue color
+        SDL_Rect sky_rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT / 2};
+        SDL_RenderFillRect(renderer, &sky_rect);
 
-        // Draw the map
-        map_draw(map);
+        // Update the player
         player_update(player);
+
+        // Perform raycasting
         ray_cast(player, map);
+
+        // Draw minimap
+        draw_minimap(player, map);
+
         // Present the renderer
         SDL_RenderPresent(renderer);
 

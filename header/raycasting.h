@@ -7,5 +7,6 @@
 
 // Function prototypes
 void ray_cast(Player* player, Map* map);
+void draw_minimap(Player* player, Map* map);
 
 #endif // RAYCASTING_H
