@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     Map* map = create_map(renderer);
 
     // Create the player
-    Player* player = create_player(renderer, (Uint8*)map->mini_map);
+    Player* player = create_player(renderer,map->mini_map);
 
     // Main loop
     int running = 1;
@@ -68,8 +68,8 @@ int main(int argc, char* argv[]) {
 
         // Draw the map
         map_draw(map);
-        player_draw(player);
-
+        player_update(player);
+        
         // Present the renderer
         SDL_RenderPresent(renderer);
 

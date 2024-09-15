@@ -1,25 +1,25 @@
+# Compiler
 CC = gcc
+
+# Compiler flags
 CFLAGS = -Wall -g -Iheader `sdl2-config --cflags`
+
+# Linker flags
 LDFLAGS = `sdl2-config --libs` -lm
 
+# Executable name
+TARGET = raycasting_game
+
 # Source files
-SRC = src/main.c src/map.c src/player.c
+SRCS = $(wildcard src/*.c)
 
-# Object files
-OBJ = $(SRC:.c=.o)
+# Rule to build the executable
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET) $(LDFLAGS)
 
-# Executable
-EXEC = raycasting_game
-
-all: $(EXEC)
-
-$(EXEC): $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
+# Clean rule
 clean:
-	rm -f $(EXEC) $(OBJ)
+	rm -f $(TARGET)
 
-.PHONY: all clean
+# Phony targets
+.PHONY: clean

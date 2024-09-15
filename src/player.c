@@ -1,10 +1,9 @@
-#include "player.h"
 #include <stdlib.h>
-#include <stdio.h>
-#include <math.h> // Include math.h for sinf and cosf
+#include "player.h"
+#include <stdio.h> 
 
 // Function to create and initialize a Player
-Player* create_player(SDL_Renderer* renderer, Uint8* world_map) {
+Player* create_player(SDL_Renderer* renderer, int mini_map[MAP_HEIGHT][MAP_WIDTH]) {
     Player* player = (Player*)malloc(sizeof(Player));
     if (!player) {
         fprintf(stderr, "Failed to allocate memory for Player.\n");
@@ -14,7 +13,13 @@ Player* create_player(SDL_Renderer* renderer, Uint8* world_map) {
     player->y = PLAYER_POS_Y;
     player->angle = PLAYER_ANGLE;
     player->renderer = renderer;
-    player->world_map = world_map;
+
+    // Copy the mini_map into player's mini_map
+    for (int y = 0; y < MAP_HEIGHT; y++) {
+        for (int x = 0; x < MAP_WIDTH; x++) {
+            player->mini_map[y][x] = mini_map[y][x];
+        }
+    }
     return player;
 }
 
@@ -23,18 +28,30 @@ void destroy_player(Player* player) {
     free(player);
 }
 
+#include <stdio.h>  // Make sure this is included for printf
+
 // Check if a given position is within the world map
 int check_wall(Player* player, int x, int y) {
-    // Placeholder for wall check logic; update according to your map representation
-    return (player->world_map[y * 10 + x] == 0);  // Update based on map width
+    // Print the coordinates and corresponding map value for debugging
+    printf("Checking wall at coordinates (%d, %d)\n", x, y);
+    
+    // Check bounds and print the result of the bounds check
+    if (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT) {
+        printf("Map value at (%d, %d): %d\n", x, y, player->mini_map[y][x]);
+        return (player->mini_map[y][x] == 1);  // Wall if value is 1
+    } else {
+        printf("Coordinates (%d, %d) are out of bounds.\n", x, y);
+        return 0;  // Out of bounds is considered empty
+    }
 }
+
 
 // Move the player and handle collisions
 void player_movement(Player* player, const Uint8* keys) {
     float sin_a = sinf(player->angle);
     float cos_a = cosf(player->angle);
     float dx = 0, dy = 0;
-    float speed = PLAYER_SPEED;  // Fixed speed, no delta_time needed
+    float speed = PLAYER_SPEED;  
     float speed_sin = speed * sin_a;
     float speed_cos = speed * cos_a;
 
@@ -67,27 +84,29 @@ void player_movement(Player* player, const Uint8* keys) {
 
 // Check wall collision and update player position
 void player_check_wall_collision(Player* player, float dx, float dy) {
-    if (check_wall(player, (int)(player->x + dx), (int)player->y)) {
+    int new_x = (int)(player->x + dx) / TILE_SIZE;
+    int new_y = (int)(player->y + dy) / TILE_SIZE;
+
+    if (!check_wall(player, new_x, (int)player->y / TILE_SIZE)) {
         player->x += dx;
     }
-    if (check_wall(player, (int)player->x, (int)(player->y + dy))) {
+    if (!check_wall(player, (int)player->x / TILE_SIZE, new_y)) {
         player->y += dy;
     }
 }
 
 // Draw the player on the screen
 void player_draw(Player* player) {
-    float end_x = player->x + 100 * cosf(player->angle);
-    float end_y = player->y  + 100 * sinf(player->angle);
+    float end_x = player->x + TILE_SIZE * cosf(player->angle);
+    float end_y = player->y + TILE_SIZE * sinf(player->angle);
 
     // Draw the line (if needed)
     SDL_SetRenderDrawColor(player->renderer, 255, 255, 0, 255); // Yellow color
-    SDL_RenderDrawLine(player->renderer, player->x , player->y , end_x, end_y);
+    SDL_RenderDrawLine(player->renderer, player->x, player->y, end_x, end_y);
 
     // Draw the circle (player position)
-    SDL_SetRenderDrawColor(player->renderer, 255, 0, 0, 255); // Red color
-    SDL_Rect rect = { (int)(player->x  - 2), (int)(player->y  - 2), 4, 4 };
-    SDL_RenderFillRect(player->renderer, &rect); // Draw filled rectangle for the player
+    SDL_SetRenderDrawColor(player->renderer, 0, 255, 0, 255); // Green color
+    SDL_RenderDrawPoint(player->renderer, player->x, player->y);
 }
 
 // Update the player (movement and drawing)
