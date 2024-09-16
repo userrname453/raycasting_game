@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "player.h"
 #include "map.h"
+#include <math.h>
 
 // Function prototypes
 void ray_cast(Player* player, Map* map);

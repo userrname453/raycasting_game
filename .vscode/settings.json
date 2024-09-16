@@ -2,6 +2,8 @@
     "files.associations": {
         "game.h": "c",
         "player.h": "c",
-        "raycasting.h": "c"
+        "raycasting.h": "c",
+        "map.h": "c",
+        "math.h": "c"
     }
 }

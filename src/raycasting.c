@@ -3,18 +3,21 @@
 
 #define C_PI 3.14159265358979323846264338327950288
 #define HALF_FOV (C_PI / 6)
-#define NUM_RAYS 1
+#define NUM_RAYS 100
 #define MAX_DEPTH 20
 #define DELTA_ANGLE (HALF_FOV * 2 / NUM_RAYS)
-
-void ray_cast(Player* player, Map* map) {
-    float ox = player->x;  // Player position
+#define SCREEN_DIST (WINDOW_WIDTH / 2 / tan(HALF_FOV) * 100)
+#define SCALE (WINDOW_WIDTH / NUM_RAYS)
+void ray_cast(Player *player, Map *map)
+{
+    float ox = player->x; // Player position
     float oy = player->y;
-    int x_map = (int)(ox / TILE_SIZE);  // Player's current tile
+    int x_map = (int)(ox / TILE_SIZE); // Player's current tile
     int y_map = (int)(oy / TILE_SIZE);
-    float ray_angle = player->angle + 0.0001;  // Start angle of the first ray
+    float ray_angle = player->angle - HALF_FOV + 0.0001; // Start angle of the first ray
 
-    for (int ray = 0; ray < NUM_RAYS; ray++) {
+    for (int ray = 0; ray < NUM_RAYS; ray++)
+    {
         float sin_a = sinf(ray_angle);
         float cos_a = cosf(ray_angle);
 
@@ -27,16 +30,21 @@ void ray_cast(Player* player, Map* map) {
         float dx_hor = delta_depth_hor * cos_a;
 
         // Check horizontal intersections
-        for (int i = 0; i < MAX_DEPTH; i++) {
+        for (int i = 0; i < MAX_DEPTH; i++)
+        {
             int tile_hor_x = (int)(x_hor / TILE_SIZE);
             int tile_hor_y = (int)(y_hor / TILE_SIZE);
             // Bounds checking
-            if (tile_hor_x >= 0 && tile_hor_x < MAP_WIDTH && tile_hor_y >= 0 && tile_hor_y < MAP_HEIGHT) {
-                if (map->mini_map[tile_hor_y][tile_hor_x] == 1) {  // If there's a wall
+            if (tile_hor_x >= 0 && tile_hor_x < MAP_WIDTH && tile_hor_y >= 0 && tile_hor_y < MAP_HEIGHT)
+            {
+                if (map->mini_map[tile_hor_y][tile_hor_x] == 1)
+                { // If there's a wall
                     break;
                 }
-            } else {
-                break;  // Out of bounds, stop checking this ray
+            }
+            else
+            {
+                break; // Out of bounds, stop checking this ray
             }
             x_hor += dx_hor;
             y_hor += dy;
@@ -52,16 +60,21 @@ void ray_cast(Player* player, Map* map) {
         float dy_vert = delta_depth_vert * sin_a;
 
         // Check vertical intersections
-        for (int i = 0; i < MAX_DEPTH; i++) {
+        for (int i = 0; i < MAX_DEPTH; i++)
+        {
             int tile_vert_x = (int)(x_vert / TILE_SIZE);
             int tile_vert_y = (int)(y_vert / TILE_SIZE);
             // Bounds checking
-            if (tile_vert_x >= 0 && tile_vert_x < MAP_WIDTH && tile_vert_y >= 0 && tile_vert_y < MAP_HEIGHT) {
-                if (map->mini_map[tile_vert_y][tile_vert_x] == 1) {  // If there's a wall
+            if (tile_vert_x >= 0 && tile_vert_x < MAP_WIDTH && tile_vert_y >= 0 && tile_vert_y < MAP_HEIGHT)
+            {
+                if (map->mini_map[tile_vert_y][tile_vert_x] == 1)
+                { // If there's a wall
                     break;
                 }
-            } else {
-                break;  // Out of bounds, stop checking this ray
+            }
+            else
+            {
+                break; // Out of bounds, stop checking this ray
             }
             x_vert += dx;
             y_vert += dy_vert;
@@ -69,12 +82,35 @@ void ray_cast(Player* player, Map* map) {
         }
 
         // Determine the closer intersection
+        int direction = (depth_vert < depth_hor) ? 1 : 0;
         float depth = (depth_vert < depth_hor) ? depth_vert : depth_hor;
-        printf("depth is : %f",depth);
-        // Drawing ray for debugging
-        SDL_SetRenderDrawColor(player->renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);  // Yellow color
-        SDL_RenderDrawLine(player->renderer, (int)ox, (int)oy,
-            (int)(ox + depth * cos_a), (int)(oy + depth * sin_a));
+
+        // Remove fishbowl effect
+        depth *= cos(player->angle - ray_angle);
+
+        // Projection
+        float proj_height = SCREEN_DIST / (depth + 0.0001);
+        printf("proj_height is : %0.2f", proj_height);
+
+        // Check the value of direction and set the color accordingly
+        if (direction == 1)
+        {
+            // Set color to light grey
+            SDL_SetRenderDrawColor(player->renderer, 211, 211, 211, SDL_ALPHA_OPAQUE); // Light grey
+        }
+        else
+        {
+            // Set color to dark grey
+            SDL_SetRenderDrawColor(player->renderer, 169, 169, 169, SDL_ALPHA_OPAQUE); // Dark grey
+        }
+        SDL_Rect rect;
+        rect.x = ray * SCALE;
+        rect.y = (WINDOW_HEIGHT / 2) - proj_height / 2;
+        rect.w = SCALE;
+        rect.h = proj_height;
+
+        // Draw the rectangle
+        SDL_RenderFillRect(player->renderer, &rect);
 
         // Move to the next ray
         ray_angle += DELTA_ANGLE;

@@ -6,6 +6,8 @@
 #define MAP_WIDTH 10
 #define MAP_HEIGHT 10
 #define TILE_SIZE 100  // Define tile size
+#define WINDOW_WIDTH 1100
+#define WINDOW_HEIGHT 1100
 
 typedef struct {
     int mini_map[MAP_HEIGHT][MAP_WIDTH];

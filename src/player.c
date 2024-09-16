@@ -108,5 +108,5 @@ void player_draw(Player* player) {
 void player_update(Player* player) {
     const Uint8* keys = SDL_GetKeyboardState(NULL);
     player_movement(player, keys);
-    player_draw(player);
+    // player_draw(player);
 }

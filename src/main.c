@@ -65,12 +65,17 @@ int main(int argc, char *argv[])
             }
         }
 
+        // Set render draw color to black
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
 
         // Clear the screen
         SDL_RenderClear(renderer);
 
+        // Update the player
+        // player_update(player);
+
         // Draw the map
-        map_draw(map);
+        // map_draw(map);
         player_update(player);
         ray_cast(player, map);
         // Present the renderer
