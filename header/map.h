@@ -15,7 +15,7 @@ typedef struct {
 } Map;
 
 // Function prototypes
-Map* create_map(SDL_Renderer* renderer);
+Map* create_map(SDL_Renderer* renderer, const char* map_file);
 void destroy_map(Map* map);
 void map_draw(Map* map);
 

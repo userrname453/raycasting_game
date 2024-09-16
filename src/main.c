@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
     }
 
     // Create the map
-    Map *map = create_map(renderer);
+    // Load the map from the file
+    Map* map = create_map(renderer, "map.txt");
 
     // Create the player
     Player *player = create_player(renderer, map->mini_map);
