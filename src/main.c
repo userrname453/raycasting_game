@@ -3,6 +3,7 @@
 #include "map.h"    // Include the map header file
 #include "player.h" // Include the player header file
 #include "raycasting.h"
+#include "minimap.h"
 
 #define WINDOW_WIDTH 1100
 #define WINDOW_HEIGHT 1100
@@ -71,13 +72,14 @@ int main(int argc, char *argv[])
         // Clear the screen
         SDL_RenderClear(renderer);
 
-        // Update the player
-        // player_update(player);
-
         // Draw the map
         // map_draw(map);
         player_update(player);
         ray_cast(player, map);
+
+        // Draw the mini-map
+        draw_minimap(renderer, player, map);
+
         // Present the renderer
         SDL_RenderPresent(renderer);
 
