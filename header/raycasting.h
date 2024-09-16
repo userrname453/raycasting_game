@@ -14,8 +14,15 @@
 #define SCREEN_DIST (WINDOW_WIDTH / 2 / tan(HALF_FOV) * 100)
 #define SCALE (WINDOW_WIDTH / NUM_RAYS)
 
+typedef struct {
+    float depth;
+    float proj_height;
+    int direction;
+    float offset;
+} RaycastingResult;
+
 void calculate_horizontal_depth(Player *player, Map *map, float sin_a, float cos_a, float *x_hor, float *y_hor, float *depth);
 void calculate_vertical_depth(Player *player, Map *map, float sin_a, float cos_a, float *x_vert, float *y_vert, float *depth);
-void ray_cast(Player *player, Map *map);
+void ray_cast(Player *player, Map *map, RaycastingResult results[NUM_RAYS]);
 
 #endif // RAYCASTING_H

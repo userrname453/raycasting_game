@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
 
     // Create the player
     Player *player = create_player(renderer, map->mini_map);
+    RaycastingResult results[NUM_RAYS];
 
     // Main loop
     int running = 1;
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
         // Draw the map
         // map_draw(map);
         player_update(player);
-        ray_cast(player, map);
+        ray_cast(player, map,results);
 
         // Draw the mini-map
         draw_minimap(renderer, player, map);
