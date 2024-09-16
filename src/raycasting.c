@@ -22,6 +22,8 @@ void ray_cast(Player *player, Map *map)
         // Projection
         float proj_height = SCREEN_DIST / (depth + 0.0001);
 
+        
+
         // Set color based on direction
         if (direction == 1)
         {
