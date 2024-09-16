@@ -9,9 +9,12 @@ void ray_cast(Player *player, Map *map)
     {
         float sin_a = sinf(ray_angle);
         float cos_a = cosf(ray_angle);
-        // Use the new functions to calculate depths
-        float depth_hor = calculate_horizontal_depth(player, map, sin_a, cos_a);
-        float depth_vert = calculate_vertical_depth(player, map, sin_a, cos_a);
+        
+        float x_hor, y_hor, depth_hor;
+        calculate_horizontal_depth(player, map, sin_a, cos_a, &x_hor, &y_hor, &depth_hor);
+
+        float x_vert, y_vert, depth_vert;
+        calculate_vertical_depth(player, map, sin_a, cos_a, &x_vert, &y_vert, &depth_vert);
 
         int direction = (depth_vert < depth_hor) ? 1 : 0;
         float depth = (depth_vert < depth_hor) ? depth_vert : depth_hor;
@@ -22,7 +25,7 @@ void ray_cast(Player *player, Map *map)
         // Projection
         float proj_height = SCREEN_DIST / (depth + 0.0001);
 
-        
+
 
         // Set color based on direction
         if (direction == 1)

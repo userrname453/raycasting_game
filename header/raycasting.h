@@ -14,8 +14,8 @@
 #define SCREEN_DIST (WINDOW_WIDTH / 2 / tan(HALF_FOV) * 100)
 #define SCALE (WINDOW_WIDTH / NUM_RAYS)
 
-float calculate_horizontal_depth(Player *player, Map *map, float sin_a, float cos_a);
-float calculate_vertical_depth(Player *player, Map *map, float sin_a, float cos_a);
+void calculate_horizontal_depth(Player *player, Map *map, float sin_a, float cos_a, float *x_hor, float *y_hor, float *depth);
+void calculate_vertical_depth(Player *player, Map *map, float sin_a, float cos_a, float *x_vert, float *y_vert, float *depth);
 void ray_cast(Player *player, Map *map);
 
 #endif // RAYCASTING_H
