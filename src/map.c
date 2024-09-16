@@ -44,7 +44,7 @@
         SDL_RenderClear(map->renderer);  // Clear the screen with black color
 
         // Set render draw color to white for walls
-        SDL_SetRenderDrawColor(map->renderer, 255, 255, 255, 255); // White
+        SDL_SetRenderDrawColor(map->renderer, 128, 128, 128, 255); // White
 
         for (int y = 0; y < MAP_HEIGHT; y++) {
             for (int x = 0; x < MAP_WIDTH; x++) {

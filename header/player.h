@@ -9,7 +9,8 @@
 #define PLAYER_POS_Y 150
 #define PLAYER_ANGLE 0
 #define PLAYER_SPEED 2.5
-#define PLAYER_ROT_SPEED 0.1
+#define PLAYER_ROT_SPEED 0.009
+
 #define TILE_SIZE 100
 
 typedef struct {

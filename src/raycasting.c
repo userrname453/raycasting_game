@@ -2,9 +2,9 @@
 #include <math.h>
 
 #define C_PI 3.14159265358979323846264338327950288
-#define HALF_FOV (C_PI / 6)    // Example field of view angle
-#define NUM_RAYS 100   // Number of rays to cast
-#define MAX_DEPTH 20   // Max depth for raycasting
+#define HALF_FOV (C_PI / 6)
+#define NUM_RAYS 1
+#define MAX_DEPTH 20
 #define DELTA_ANGLE (HALF_FOV * 2 / NUM_RAYS)
 
 void ray_cast(Player* player, Map* map) {
@@ -12,7 +12,7 @@ void ray_cast(Player* player, Map* map) {
     float oy = player->y;
     int x_map = (int)(ox / TILE_SIZE);  // Player's current tile
     int y_map = (int)(oy / TILE_SIZE);
-    float ray_angle = player->angle - HALF_FOV + 0.0001;  // Start angle of the first ray
+    float ray_angle = player->angle + 0.0001;  // Start angle of the first ray
 
     for (int ray = 0; ray < NUM_RAYS; ray++) {
         float sin_a = sinf(ray_angle);
@@ -70,9 +70,9 @@ void ray_cast(Player* player, Map* map) {
 
         // Determine the closer intersection
         float depth = (depth_vert < depth_hor) ? depth_vert : depth_hor;
-
+        printf("depth is : %f",depth);
         // Drawing ray for debugging
-        SDL_SetRenderDrawColor(player->renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);  // Yellow color
+        SDL_SetRenderDrawColor(player->renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);  // Yellow color
         SDL_RenderDrawLine(player->renderer, (int)ox, (int)oy,
             (int)(ox + depth * cos_a), (int)(oy + depth * sin_a));
 

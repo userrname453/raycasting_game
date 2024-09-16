@@ -92,12 +92,12 @@ void player_check_wall_collision(Player* player, float dx, float dy) {
 
 // Draw the player on the screen
 void player_draw(Player* player) {
-    float end_x = player->x + TILE_SIZE * cosf(player->angle);
-    float end_y = player->y + TILE_SIZE * sinf(player->angle);
+    // float end_x = player->x + TILE_SIZE * cosf(player->angle);
+    // float end_y = player->y + TILE_SIZE * sinf(player->angle);
 
     // Draw the line (if needed)
-    SDL_SetRenderDrawColor(player->renderer, 255, 255, 0, 255); // Yellow color
-    SDL_RenderDrawLine(player->renderer, player->x, player->y, end_x, end_y);
+    // SDL_SetRenderDrawColor(player->renderer, 255, 255, 0, 255); // Yellow color
+    // SDL_RenderDrawLine(player->renderer, player->x, player->y, end_x, end_y);
 
     // Draw the circle (player position)
     SDL_SetRenderDrawColor(player->renderer, 0, 255, 0, 255); // Green color
