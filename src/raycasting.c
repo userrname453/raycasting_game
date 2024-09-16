@@ -9,10 +9,9 @@ void ray_cast(Player *player, Map *map)
     {
         float sin_a = sinf(ray_angle);
         float cos_a = cosf(ray_angle);
-
         // Use the new functions to calculate depths
-        float depth_hor = calculate_horizontal_depth(player, map, ray_angle, sin_a, cos_a);
-        float depth_vert = calculate_vertical_depth(player, map, ray_angle, sin_a, cos_a);
+        float depth_hor = calculate_horizontal_depth(player, map, sin_a, cos_a);
+        float depth_vert = calculate_vertical_depth(player, map, sin_a, cos_a);
 
         int direction = (depth_vert < depth_hor) ? 1 : 0;
         float depth = (depth_vert < depth_hor) ? depth_vert : depth_hor;

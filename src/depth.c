@@ -1,7 +1,7 @@
 #include "raycasting.h"
 #include <math.h>
 
-float calculate_horizontal_depth(Player *player, Map *map, float ray_angle, float sin_a, float cos_a)
+float calculate_horizontal_depth(Player *player, Map *map, float sin_a, float cos_a)
 {
     float ox = player->x;
     float oy = player->y;
@@ -38,7 +38,7 @@ float calculate_horizontal_depth(Player *player, Map *map, float ray_angle, floa
     return depth_hor;
 }
 
-float calculate_vertical_depth(Player *player, Map *map, float ray_angle, float sin_a, float cos_a)
+float calculate_vertical_depth(Player *player, Map *map, float sin_a, float cos_a)
 {
     float ox = player->x;
     float oy = player->y;
