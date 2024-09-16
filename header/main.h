@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WINDOW_WIDTH 1100
-#define WINDOW_HEIGHT 1100
+#define WIDTH 1600
+#define HEIGHT 900
 
 #endif // MAIN_H

@@ -2,20 +2,26 @@
 #include <math.h>
 #include "map.h"
 #include "main.h"
+
 #define C_PI 3.14159265358979323846264338327950288
-#define HALF_FOV (C_PI / 6)    // Example field of view angle
-#define NUM_RAYS 320   // Number of rays to cast
+#define FOV (C_PI / 6)
+#define HALF_FOV (FOV / 2)    // Example field of view angle
+#define NUM_RAYS (WIDTH / 2)     // Number of rays to cast
 #define MAX_DEPTH 20   // Max depth for raycasting
 #define DELTA_ANGLE (HALF_FOV * 2 / NUM_RAYS)
-#define SCREEN_DIST ((WINDOW_WIDTH / 2) / tan(HALF_FOV))
-#define SCALE 0.5  // Scale factor for wall heights
+#define SCREEN_DIST ((WIDTH / 2) / tan(HALF_FOV))
+#define SCALE 2  // Scale factor for wall heights
+#define HALF_WIDTH  (WIDTH / 2)
+#define HALF_HEIGHT  (HEIGHT / 2)
 
 void ray_cast(Player* player, Map* map) {
     float ox = player->x;  // Player position
     float oy = player->y;
+
     int x_map = (int)(ox / TILE_SIZE);  // Player's current tile
     int y_map = (int)(oy / TILE_SIZE);
-    float ray_angle = player->angle - HALF_FOV + 0.0001;  // Start angle of the first ray
+
+    float ray_angle = player ->angle - HALF_FOV + 0.0001;
 
     for (int ray = 0; ray < NUM_RAYS; ray++) {
         float sin_a = sinf(ray_angle);
@@ -80,71 +86,52 @@ void ray_cast(Player* player, Map* map) {
         }
 
         // Determine the closer intersection
-        float depth = (depth_vert_final && depth_vert_final < depth_hor_final) ? depth_vert_final : depth_hor_final;
-        if (!depth) depth = MAX_DEPTH * TILE_SIZE;  // If no wall was hit, set to max depth
+        float depth;
+        if (!depth_hor_final) {
+            depth = depth_vert_final;
+        } else if (!depth_vert_final) {
+            depth = depth_hor_final;
+        } else {
+            depth = (depth_vert_final < depth_hor_final) ? depth_vert_final : depth_hor_final;
+        }
+            // Print debug information
+        printf("Ray %d:\n", ray);
+        printf("  Horizontal Depth: %f\n", depth_hor_final);
+        printf("  Vertical Depth: %f\n", depth_vert_final);
+        printf("  final Depth: %f\n", depth);
 
         // Remove fishbowl effect
         depth *= cosf(player->angle - ray_angle);
 
         // Calculate wall height
-        float wall_height = SCREEN_DIST * TILE_SIZE / (depth + 0.0001);
+        float proj_height = SCREEN_DIST / (depth + 0.0001);
 
         // Draw the wall strip
-        SDL_SetRenderDrawColor(player->renderer, 200, 200, 200, 255);  // Light gray color
+        // Set the draw color to white
+        SDL_SetRenderDrawColor(player->renderer, 255, 255, 255, 255);  // Light gray color
+
+        // Define the rectangle representing the wall strip
         SDL_Rect wall_rect = {
-            ray * SCALE,
-            (WINDOW_HEIGHT - wall_height * SCALE) / 2,
-            SCALE,
-            wall_height * SCALE
+            ray * SCALE,  // X position
+            (HEIGHT / 2 - proj_height / 2),  // Y position
+            SCALE,  // Width
+            proj_height   // Height
         };
+
+        // Render the rectangle (the wall strip)
         SDL_RenderFillRect(player->renderer, &wall_rect);
 
-        // Draw floor
-        SDL_SetRenderDrawColor(player->renderer, 100, 100, 100, 255);  // Dark gray color
-        SDL_Rect floor_rect = {
-            ray * SCALE,
-            (WINDOW_HEIGHT + wall_height * SCALE) / 2,
-            SCALE,
-            (WINDOW_HEIGHT - wall_height * SCALE) / 2
-        };
-        SDL_RenderFillRect(player->renderer, &floor_rect);
+        // // Draw floor
+        // SDL_SetRenderDrawColor(player->renderer, 100, 100, 100, 255);  // Dark gray color
+        // SDL_Rect floor_rect = {
+        //     ray * SCALE,
+        //     (HEIGHT + proj_height * SCALE) / 2,
+        //     SCALE,
+        //     (HEIGHT - proj_height * SCALE) / 2
+        // };
+        // SDL_RenderFillRect(player->renderer, &floor_rect);
 
         // Move to the next ray
         ray_angle += DELTA_ANGLE;
     }
-}
-
-void draw_minimap(Player* player, Map* map) {
-    int minimap_size = 150;
-    int tile_size = minimap_size / MAP_WIDTH;
-
-    // Draw background
-    SDL_SetRenderDrawColor(player->renderer, 0, 0, 0, 200);
-    SDL_Rect bg_rect = {0, 0, minimap_size, minimap_size};
-    SDL_RenderFillRect(player->renderer, &bg_rect);
-
-    // Draw walls
-    SDL_SetRenderDrawColor(player->renderer, 255, 255, 255, 255);
-    for (int y = 0; y < MAP_HEIGHT; y++) {
-        for (int x = 0; x < MAP_WIDTH; x++) {
-            if (map->mini_map[y][x] == 1) {
-                SDL_Rect wall_rect = {x * tile_size, y * tile_size, tile_size, tile_size};
-                SDL_RenderFillRect(player->renderer, &wall_rect);
-            }
-        }
-    }
-
-    // Draw player
-    SDL_SetRenderDrawColor(player->renderer, 255, 0, 0, 255);
-    SDL_Rect player_rect = {
-        (int)(player->x / TILE_SIZE * tile_size) - 2,
-        (int)(player->y / TILE_SIZE * tile_size) - 2,
-        4, 4
-    };
-    SDL_RenderFillRect(player->renderer, &player_rect);
-
-    // Draw player direction
-    int dir_x = (int)(player->x / TILE_SIZE * tile_size + cosf(player->angle) * 10);
-    int dir_y = (int)(player->y / TILE_SIZE * tile_size + sinf(player->angle) * 10);
-    SDL_RenderDrawLine(player->renderer, player_rect.x + 2, player_rect.y + 2, dir_x, dir_y);
 }

@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 
-#define MAP_WIDTH 10
-#define MAP_HEIGHT 10
+#define MAP_WIDTH 11
+#define MAP_HEIGHT 9
 #define TILE_SIZE 100  // Define tile size
 
 typedef struct {
