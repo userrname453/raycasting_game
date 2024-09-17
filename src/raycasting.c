@@ -67,12 +67,12 @@ void ray_cast(Player *player, Map *map, RaycastingResult *results)
         results[ray] = (RaycastingResult){depth, proj_height, direction, offset};
 
         // Debugging output
-        printf("Ray %d:\n", ray);
-        printf("  Angle: %.2f\n", ray_angle);
-        printf("  Depth: %.2f\n", depth);
-        printf("  Projection Height: %.2f\n", proj_height);
-        printf("  Direction: %d\n", direction);
-        printf("  Offset: %d\n", offset);
+        // printf("Ray %d:\n", ray);
+        // printf("  Angle: %.2f\n", ray_angle);
+        // printf("  Depth: %.2f\n", depth);
+        // printf("  Projection Height: %.2f\n", proj_height);
+        // printf("  Direction: %d\n", direction);
+        // printf("  Offset: %d\n", offset);
 
 
         // Draw walls using textures

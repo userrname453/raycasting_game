@@ -7,8 +7,6 @@
 #include "minimap.h"
 #include "shotgun.h"
 
-#define WINDOW_WIDTH 1100
-#define WINDOW_HEIGHT 1100
 
 int main(int argc, char *argv[])
 {
@@ -62,12 +60,13 @@ int main(int argc, char *argv[])
     // Create the map
     Map *map = create_map(renderer, "map.txt");
 
-    // Create the player
-    Player *player = create_player(renderer, map->mini_map);
-    RaycastingResult results[NUM_RAYS];
-
     // Create the shotgun
     Shotgun *shotgun = create_shotgun(renderer);
+
+    // Create the player
+    Player *player = create_player(renderer, map->mini_map,shotgun); 
+    RaycastingResult results[NUM_RAYS];
+
     if (!shotgun)
     {
         fprintf(stderr, "Failed to create shotgun!\n");
@@ -91,13 +90,6 @@ int main(int argc, char *argv[])
             {
                 running = 0;
             }
-            else if (event.type == SDL_KEYDOWN)
-            {
-                if (event.key.keysym.sym == SDLK_SPACE)
-                {
-                    start_shotgun_animation(shotgun);
-                }
-            }
         }
 
         // Set render draw color to black
@@ -107,15 +99,16 @@ int main(int argc, char *argv[])
         SDL_RenderClear(renderer);
 
         player_update(player);
+
         ray_cast(player, map, results);
+
+
+        
+        render_shotgun(renderer, shotgun);
 
         // Draw the mini-map
         draw_minimap(renderer, player, map);
-
-        // Update and render the shotgun
-        update_shotgun(shotgun);
-        render_shotgun(renderer, shotgun);
-
+        
         // Present the renderer
         SDL_RenderPresent(renderer);
 
