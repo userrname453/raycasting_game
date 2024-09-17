@@ -1,6 +1,7 @@
 // initialize.c
 #include "initialize.h"
 #include <stdio.h>
+#include "mixer.h"
 
 // Initialize SDL, window, and renderer
 int initialize_sdl(SDL_Window **window, SDL_Renderer **renderer)
@@ -12,11 +13,18 @@ int initialize_sdl(SDL_Window **window, SDL_Renderer **renderer)
         return 0;
     }
 
+    if (mixer_init() != 0)
+    {
+        printf("Failed to initialize mixer\n");
+        SDL_Quit();
+        return 1;
+    }
+
     // Create window
     *window = SDL_CreateWindow(
         "Raycasting Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-    
+
     if (*window == NULL)
     {
         fprintf(stderr, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -54,6 +62,7 @@ void cleanup_sdl(SDL_Window *window, SDL_Renderer *renderer)
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     IMG_Quit();
+    mixer_cleanup();
     SDL_Quit();
 }
 

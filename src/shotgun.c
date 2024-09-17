@@ -1,6 +1,7 @@
 #include "shotgun.h"
 #include <stdio.h>
 #include "map.h"
+#include "mixer.h"
 
 Shotgun *create_shotgun(SDL_Renderer *renderer)
 {
@@ -91,8 +92,9 @@ void start_shotgun_animation(Shotgun *shotgun)
 {
     if (!shotgun->is_firing)
     {
+        play_shotgun_sound();
         shotgun->is_firing = 1;
         shotgun->current_frame = 1; // Start from the first firing frame
         shotgun->last_update = SDL_GetTicks();
     }
-}
+}   

@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
+
 
 #define SHOTGUN_FRAMES 6
 #define ANIMATION_SPEED 100 // milliseconds per frame
