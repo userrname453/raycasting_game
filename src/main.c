@@ -1,9 +1,11 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include "map.h"    // Include the map header file
 #include "player.h" // Include the player header file
 #include "raycasting.h"
 #include "minimap.h"
+#include "shotgun.h"
 
 #define WINDOW_WIDTH 1100
 #define WINDOW_HEIGHT 1100
@@ -47,13 +49,36 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags))
+    {
+        fprintf(stderr, "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
     // Create the map
-    // Load the map from the file
-    Map* map = create_map(renderer, "map.txt");
+    Map *map = create_map(renderer, "map.txt");
 
     // Create the player
     Player *player = create_player(renderer, map->mini_map);
     RaycastingResult results[NUM_RAYS];
+
+    // Create the shotgun
+    Shotgun *shotgun = create_shotgun(renderer);
+    if (!shotgun)
+    {
+        fprintf(stderr, "Failed to create shotgun!\n");
+        destroy_player(player);
+        destroy_map(map);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        IMG_Quit();
+        SDL_Quit();
+        return 1;
+    }
 
     // Main loop
     int running = 1;
@@ -66,6 +91,13 @@ int main(int argc, char *argv[])
             {
                 running = 0;
             }
+            else if (event.type == SDL_KEYDOWN)
+            {
+                if (event.key.keysym.sym == SDLK_SPACE)
+                {
+                    start_shotgun_animation(shotgun);
+                }
+            }
         }
 
         // Set render draw color to black
@@ -74,13 +106,15 @@ int main(int argc, char *argv[])
         // Clear the screen
         SDL_RenderClear(renderer);
 
-        // Draw the map
-        // map_draw(map);
         player_update(player);
-        ray_cast(player, map,results);
+        ray_cast(player, map, results);
 
         // Draw the mini-map
         draw_minimap(renderer, player, map);
+
+        // Update and render the shotgun
+        update_shotgun(shotgun);
+        render_shotgun(renderer, shotgun);
 
         // Present the renderer
         SDL_RenderPresent(renderer);
@@ -89,10 +123,12 @@ int main(int argc, char *argv[])
     }
 
     // Cleanup
+    destroy_shotgun(shotgun);
     destroy_player(player);
     destroy_map(map);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    IMG_Quit();
     SDL_Quit();
 
     return 0;
