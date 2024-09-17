@@ -7,6 +7,7 @@
 
 
 #define C_PI 3.14159265358979323846264338327950288
+#define FOV (C_PI / 3)
 #define HALF_FOV (C_PI / 6)
 #define NUM_RAYS 100
 #define MAX_DEPTH 20

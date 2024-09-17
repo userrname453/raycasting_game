@@ -67,9 +67,10 @@ void cleanup_sdl(SDL_Window *window, SDL_Renderer *renderer)
 }
 
 // Cleanup all resources (map, player, shotgun)
-void cleanup_resources(Player *player, Map *map, Shotgun *shotgun)
+void cleanup_resources(Player *player, Map *map, Shotgun *shotgun,Enemy *enemy)
 {
     destroy_shotgun(shotgun);
     destroy_player(player);
     destroy_map(map);
+    destroy_enemy(enemy);
 }

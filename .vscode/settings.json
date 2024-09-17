@@ -8,6 +8,8 @@
         "sdl_image.h": "c",
         "sdl.h": "c",
         "shotgun.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "enemy.h": "c",
+        "map": "c"
     }
 }

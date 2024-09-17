@@ -6,7 +6,7 @@
 #include "raycasting.h"
 #include "minimap.h"
 #include "shotgun.h"
-
+#include "enemy.h"
 int main(int argc, char *argv[])
 {
     // Variables for window and renderer
@@ -22,12 +22,21 @@ int main(int argc, char *argv[])
     // Initialize map, player, and shotgun
     Map *map = create_map(renderer, "map.txt");
     Shotgun *shotgun = create_shotgun(renderer);
-    Player *player = create_player(renderer, map->mini_map,shotgun);
+    Player *player = create_player(renderer, map->mini_map, shotgun);
+    Enemy *enemy = create_enemy(renderer, map);
+
+    if (!enemy)
+    {
+        fprintf(stderr, "Failed to create enemy!\n");
+        cleanup_resources(player, map, shotgun,enemy);
+        cleanup_sdl(window, renderer);
+        return 1;
+    }
 
     if (!player || !map || !shotgun)
     {
         fprintf(stderr, "Failed to initialize resources!\n");
-        cleanup_resources(player, map, shotgun);
+        cleanup_resources(player, map, shotgun,enemy);
         cleanup_sdl(window, renderer);
         return 1;
     }
@@ -59,9 +68,10 @@ int main(int argc, char *argv[])
 
         render_shotgun(renderer, shotgun);
 
+        draw_enemy(renderer, enemy, player, map);
         // Draw the mini-map
         draw_minimap(renderer, player, map);
-        
+
         // Present the renderer
         SDL_RenderPresent(renderer);
 
@@ -69,7 +79,7 @@ int main(int argc, char *argv[])
     }
 
     // Cleanup resources and SDL
-    cleanup_resources(player, map, shotgun);
+    cleanup_resources(player, map, shotgun, enemy);
     cleanup_sdl(window, renderer);
 
     return 0;
