@@ -25,4 +25,5 @@ void calculate_horizontal_depth(Player *player, Map *map, float sin_a, float cos
 void calculate_vertical_depth(Player *player, Map *map, float sin_a, float cos_a, float *x_vert, float *y_vert, float *depth);
 void ray_cast(Player *player, Map *map, RaycastingResult results[NUM_RAYS]);
 
-#endif // RAYCASTING_H
+#endif // RAYCASTING_Hvoid ray_cast(Player *player, Map *map, RaycastingResult *results);
+
