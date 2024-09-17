@@ -1,10 +1,8 @@
-// draw_walls.h
 #ifndef DRAW_WALLS_H
 #define DRAW_WALLS_H
 
 #include <SDL2/SDL.h>
-#include "raycasting.h"
 
-void draw_walls(SDL_Renderer *renderer, RaycastingResult *results);
+void draw_wall_texture(SDL_Renderer *renderer, SDL_Texture *texture, int ray, float proj_height, int offset);
 
 #endif // DRAW_WALLS_H
