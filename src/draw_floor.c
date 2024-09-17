@@ -4,7 +4,7 @@
 #include "map.h"
 
 void draw_floor(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 34, 139, 34, 255); // Green floor color
+    SDL_SetRenderDrawColor(renderer, 161, 116, 110, 255); // Green floor color
     SDL_Rect floor = { 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, WINDOW_HEIGHT / 2 };
     SDL_RenderFillRect(renderer, &floor);
 }
