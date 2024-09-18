@@ -7,6 +7,6 @@
 
 #define MINIMAP_SIZE 150
 
-void draw_minimap(SDL_Renderer* renderer, Player* player, Map* map);
+void draw_minimap(SDL_Renderer *renderer, Player *player, Map *map);
 
-#endif // MINIMAP_H
+#endif /* MINIMAP_H */

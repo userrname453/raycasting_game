@@ -1,36 +1,51 @@
 #include "mixer.h"
 #include <stdio.h>
 
-static Mix_Chunk *shotgun_sound = NULL;
+static Mix_Chunk *shotgun_sound;
 
-int mixer_init() {
-    // Initialize SDL_mixer
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-        return -1;
-    }
+/**
+ * mixer_init - Initializes SDL_mixer and loads sounds
+ *
+ * Return: 0 on success, -1 on failure
+ */
+int mixer_init(void)
+{
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n",
+		       Mix_GetError());
+		return (-1);
+	}
 
-    // Load the shotgun sound
-    shotgun_sound = Mix_LoadWAV("resources/sounds/shotgun.wav");
-    if (shotgun_sound == NULL) {
-        printf("Failed to load shotgun sound! SDL_mixer Error: %s\n", Mix_GetError());
-        return -1;
-    }
+	shotgun_sound = Mix_LoadWAV("resources/sounds/shotgun.wav");
+	if (shotgun_sound == NULL)
+	{
+		printf("Failed to load shotgun sound! SDL_mixer Error: %s\n",
+		       Mix_GetError());
+		return (-1);
+	}
 
-    return 0;
+	return (0);
 }
 
-void play_shotgun_sound() {
-    if (shotgun_sound != NULL) {
-        Mix_PlayChannel(-1, shotgun_sound, 0);
-    }
+/**
+ * play_shotgun_sound - Plays the shotgun sound effect
+ */
+void play_shotgun_sound(void)
+{
+	if (shotgun_sound != NULL)
+		Mix_PlayChannel(-1, shotgun_sound, 0);
 }
 
-void mixer_cleanup() {
-    // Free the sound and close SDL_mixer
-    if (shotgun_sound != NULL) {
-        Mix_FreeChunk(shotgun_sound);
-        shotgun_sound = NULL;
-    }
-    Mix_CloseAudio();
+/**
+ * mixer_cleanup - Frees sound resources and closes SDL_mixer
+ */
+void mixer_cleanup(void)
+{
+	if (shotgun_sound != NULL)
+	{
+		Mix_FreeChunk(shotgun_sound);
+		shotgun_sound = NULL;
+	}
+	Mix_CloseAudio();
 }

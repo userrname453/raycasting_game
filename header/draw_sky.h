@@ -1,4 +1,3 @@
-// draw_sky.h
 #ifndef DRAW_SKY_H
 #define DRAW_SKY_H
 
@@ -6,4 +5,4 @@
 
 void draw_sky(SDL_Renderer *renderer);
 
-#endif // DRAW_SKY_H
+#endif /* DRAW_SKY_H */

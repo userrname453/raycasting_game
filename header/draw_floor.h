@@ -1,4 +1,3 @@
-// draw_floor.h
 #ifndef DRAW_FLOOR_H
 #define DRAW_FLOOR_H
 
@@ -6,4 +5,4 @@
 
 void draw_floor(SDL_Renderer *renderer);
 
-#endif // DRAW_FLOOR_H
+#endif /* DRAW_FLOOR_H */

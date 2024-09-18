@@ -3,13 +3,8 @@
 
 #include <SDL2/SDL_mixer.h>
 
-// Initializes SDL_mixer and loads the shotgun sound
-int mixer_init();
+int mixer_init(void);
+void play_shotgun_sound(void);
+void mixer_cleanup(void);
 
-// Plays the shotgun sound
-void play_shotgun_sound();
-
-// Frees the sound and closes SDL_mixer
-void mixer_cleanup();
-
-#endif // MIXER_H
+#endif /* MIXER_H */

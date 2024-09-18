@@ -9,4 +9,4 @@
 int check_win(Player *player, const Uint8 *keys, Enemy *enemy, Map *map);
 void display_win_texture(Player *player);
 
-#endif // CHECK_WIN_H
+#endif /* CHECK_WIN_H */

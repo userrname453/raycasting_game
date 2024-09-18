@@ -4,31 +4,52 @@
 #include "enemy.h"
 #include "map.h"
 
+/**
+ * check_win - Check if the player has won
+ * @player: Pointer to the player structure
+ * @keys: Array of keyboard states
+ * @enemy: Pointer to the enemy structure
+ * @map: Pointer to the map structure
+ *
+ * Return: 1 if the player has won, 0 otherwise
+ */
 int check_win(Player *player, const Uint8 *keys, Enemy *enemy, Map *map)
 {
-    if (keys[SDL_SCANCODE_SPACE] && is_player_facing_enemy(player, enemy->x, enemy->y) && !check_wall_intersection(map, player->x, player->y, enemy->x, enemy->y))
-    {
-        return 1; // Return 1 to indicate a win condition
-    }
-    return 0; // Return 0 if the win condition is not met
+	if (keys[SDL_SCANCODE_SPACE] &&
+	    is_player_facing_enemy(player, enemy->x, enemy->y) &&
+	    !check_wall_intersection(map, player->x, player->y, enemy->x, enemy->y))
+	{
+		return (1);
+	}
+	return (0);
 }
 
+/**
+ * display_win_texture - Display the win texture on the screen
+ * @player: Pointer to the player structure
+ */
 void display_win_texture(Player *player)
 {
-    // Load and render win.png
-    SDL_Surface *win_surface = IMG_Load("resources/win.png");
-    if (win_surface)
-    {
-        SDL_Texture *win_texture = SDL_CreateTextureFromSurface(player->renderer, win_surface);
-        SDL_FreeSurface(win_surface);
+	SDL_Surface *win_surface;
+	SDL_Texture *win_texture;
+	SDL_Rect dest_rect;
 
-        // Render the win texture
-        SDL_Rect dest_rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-        SDL_RenderCopy(player->renderer, win_texture, NULL, &dest_rect);
-        SDL_DestroyTexture(win_texture);
-    }
-    else
-    {
-        fprintf(stderr, "Failed to load win texture! SDL_image Error: %s\n", IMG_GetError());
-    }
+	win_surface = IMG_Load("resources/win.png");
+	if (win_surface)
+	{
+		win_texture = SDL_CreateTextureFromSurface(player->renderer, win_surface);
+		SDL_FreeSurface(win_surface);
+
+		dest_rect.x = 0;
+		dest_rect.y = 0;
+		dest_rect.w = WINDOW_WIDTH;
+		dest_rect.h = WINDOW_HEIGHT;
+		SDL_RenderCopy(player->renderer, win_texture, NULL, &dest_rect);
+		SDL_DestroyTexture(win_texture);
+	}
+	else
+	{
+		fprintf(stderr, "Failed to load win texture! SDL_image Error: %s\n",
+			IMG_GetError());
+	}
 }
