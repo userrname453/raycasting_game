@@ -17,5 +17,6 @@ typedef struct {
 Enemy* create_enemy(SDL_Renderer* renderer, Map* map);
 void destroy_enemy(Enemy* enemy);
 void draw_enemy(SDL_Renderer* renderer, Enemy* enemy, Player* player, Map* map);
+int check_wall_intersection(Map *map, float x1, float y1, float x2, float y2);
 
 #endif // ENEMY_H

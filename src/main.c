@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         }
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-        if (check_win(player, keys, enemy))
+        if (check_win(player, keys, enemy,map))
         {
             win_condition_met = 1; // Set the flag if win condition is met
         }
