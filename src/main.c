@@ -7,6 +7,8 @@
 #include "minimap.h"
 #include "shotgun.h"
 #include "enemy.h"
+#include "check_win.h"
+
 int main(int argc, char *argv[])
 {
     // Variables for window and renderer
@@ -24,27 +26,11 @@ int main(int argc, char *argv[])
     Shotgun *shotgun = create_shotgun(renderer);
     Player *player = create_player(renderer, map->mini_map, shotgun);
     Enemy *enemy = create_enemy(renderer, map);
-
-    if (!enemy)
-    {
-        fprintf(stderr, "Failed to create enemy!\n");
-        cleanup_resources(player, map, shotgun,enemy);
-        cleanup_sdl(window, renderer);
-        return 1;
-    }
-
-    if (!player || !map || !shotgun)
-    {
-        fprintf(stderr, "Failed to initialize resources!\n");
-        cleanup_resources(player, map, shotgun,enemy);
-        cleanup_sdl(window, renderer);
-        return 1;
-    }
-
     RaycastingResult results[NUM_RAYS];
 
     // Main loop
     int running = 1;
+    int win_condition_met = 0;
     while (running)
     {
         SDL_Event event;
@@ -55,6 +41,12 @@ int main(int argc, char *argv[])
                 running = 0;
             }
         }
+        const Uint8 *keys = SDL_GetKeyboardState(NULL);
+
+        if (check_win(player, keys, enemy))
+        {
+            win_condition_met = 1; // Set the flag if win condition is met
+        }
 
         // Set render draw color to black
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
@@ -62,25 +54,26 @@ int main(int argc, char *argv[])
         // Clear the screen
         SDL_RenderClear(renderer);
 
-        player_update(player);
-
-        ray_cast(player, map, results);
-
-        render_shotgun(renderer, shotgun);
-
-        draw_enemy(renderer, enemy, player, map);
-        // Draw the mini-map
-        draw_minimap(renderer, player, map);
+        if (win_condition_met)
+        {
+            display_win_texture(player); // Show the win screen
+        }
+        else
+        {
+            player_update(player, keys);
+            ray_cast(player, map, results);
+            draw_enemy(renderer, enemy, player, map);
+            render_shotgun(renderer, shotgun);
+            draw_minimap(renderer, player, map);
+        }
 
         // Present the renderer
         SDL_RenderPresent(renderer);
 
         SDL_Delay(16); // Approx 60 FPS
     }
-
     // Cleanup resources and SDL
     cleanup_resources(player, map, shotgun, enemy);
     cleanup_sdl(window, renderer);
-
     return 0;
 }

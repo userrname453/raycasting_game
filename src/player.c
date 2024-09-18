@@ -31,6 +31,24 @@ Player *create_player(SDL_Renderer *renderer, int mini_map[MAP_HEIGHT][MAP_WIDTH
     return player;
 }
 
+int is_player_facing_enemy(Player *player, float ex, float ey )
+{
+    float dx = ex - player->x;
+    float dy = ey - player->y;
+    float angle_to_enemy = atan2f(dy, dx);
+    float angle_diff = angle_to_enemy - player->angle;
+
+    // Normalize angle difference
+    if (angle_diff < -C_PI)
+        angle_diff += 2 * C_PI;
+    if (angle_diff > C_PI)
+        angle_diff -= 2 * C_PI;
+    // printf("angle diff %d  \n", fabsf(angle_diff) < (C_PI / 6) );
+
+    // Check if the angle difference is within a threshold (e.g., 30 degrees)
+    return fabsf(angle_diff) < (C_PI / 6); // 30 degrees
+}
+
 // Function to destroy a Player
 void destroy_player(Player *player)
 {
@@ -134,9 +152,8 @@ void player_draw(Player *player)
 }
 
 // Update the player (movement and drawing)
-void player_update(Player *player)
+void player_update(Player *player,const Uint8 *keys)
 {
-    const Uint8 *keys = SDL_GetKeyboardState(NULL);
     player_movement(player, keys);
     update_shotgun(player->shotgun);
 }

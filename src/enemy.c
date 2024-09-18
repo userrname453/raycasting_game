@@ -91,7 +91,8 @@ int check_wall_intersection(Map *map, float x1, float y1, float x2, float y2)
     return 0; // No wall intersection
 }
 
-void draw_enemy(SDL_Renderer* renderer, Enemy* enemy, Player* player, Map* map) {
+void draw_enemy(SDL_Renderer *renderer, Enemy *enemy, Player *player, Map *map)
+{
     // Calculate angle and distance to enemy
     float dx = enemy->x - player->x;
     float dy = enemy->y - player->y;
@@ -99,13 +100,17 @@ void draw_enemy(SDL_Renderer* renderer, Enemy* enemy, Player* player, Map* map) 
     float enemy_angle = atan2f(dy, dx) - player->angle;
 
     // Adjust angle to be between -π and π
-    if (enemy_angle < -C_PI) enemy_angle += 2 * C_PI;
-    if (enemy_angle > C_PI) enemy_angle -= 2 * C_PI;
+    if (enemy_angle < -C_PI)
+        enemy_angle += 2 * C_PI;
+    if (enemy_angle > C_PI)
+        enemy_angle -= 2 * C_PI;
 
     // Check if enemy is in field of view
-    if (fabsf(enemy_angle) < FOV / 2) {
+    if (fabsf(enemy_angle) < FOV / 2)
+    {
         // Check if there's a wall between the player and the enemy
-        if (!check_wall_intersection(map, player->x, player->y, enemy->x, enemy->y)) {
+        if (!check_wall_intersection(map, player->x, player->y, enemy->x, enemy->y))
+        {
             // Calculate enemy screen position and size
             float enemy_screen_x = (0.5f * (enemy_angle / (FOV / 2)) + 0.5f) * WINDOW_WIDTH;
             float enemy_height = WINDOW_HEIGHT / distance * ENEMY_SIZE;
@@ -116,11 +121,11 @@ void draw_enemy(SDL_Renderer* renderer, Enemy* enemy, Player* player, Map* map) 
                 enemy_screen_x - enemy_height / 2,
                 WINDOW_HEIGHT / 2 - enemy_height / 2,
                 enemy_height,
-                enemy_height
-            };
+                enemy_height};
 
             // Draw the enemy
             SDL_RenderCopy(renderer, enemy->texture, &src_rect, &dest_rect);
         }
     }
 }
+

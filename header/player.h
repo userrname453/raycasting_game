@@ -11,7 +11,7 @@
 #define PLAYER_ANGLE 0
 #define PLAYER_SPEED 2.5
 #define PLAYER_ROT_SPEED 0.035
-
+#define C_PI 3.14159265358979323846264338327950288
 #define TILE_SIZE 100
 
 typedef struct
@@ -30,6 +30,7 @@ void destroy_player(Player *player);
 void player_movement(Player *player, const Uint8 *keys);
 void player_check_wall_collision(Player *player, float dx, float dy);
 void player_draw(Player *player);
-void player_update(Player *player);
+void player_update(Player *player,const Uint8 *keys);
+int is_player_facing_enemy(Player *player, float ex, float ey );
 
 #endif // PLAYER_H
